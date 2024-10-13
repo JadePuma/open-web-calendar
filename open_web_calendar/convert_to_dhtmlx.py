@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime
+import logging
 from html import escape
 from urllib.parse import unquote
 
@@ -14,6 +15,9 @@ from flask import jsonify
 
 from .clean_html import clean_html
 from .conversion_base import ConversionStrategy
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 def is_date(date):
