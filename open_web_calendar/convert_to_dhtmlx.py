@@ -34,7 +34,7 @@ class ConvertToDhtmlx(ConversionStrategy):
 
     def created(self):
         """Set attribtues when created."""
-        logging.info("Your message here")
+        logging.info(self)
 
         try:
             self.timezone = pytz.timezone(self.specification["timezone"])
