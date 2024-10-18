@@ -4139,7 +4139,8 @@ div.dhx_modal_cover {
     font-family: var(--dhx-scheduler-font-family);
     font-size: var(--dhx-scheduler-regular-font-size);
     line-height: var(--dhx-scheduler-regular-line-height);
-    font-weight: var(--dhx-scheduler-regular-font-weight)
+    font-weight: var(--dhx-scheduler-regular-font-weight);
+    display:none;
 }
 
 .dhtmlXTooltip_rtl {

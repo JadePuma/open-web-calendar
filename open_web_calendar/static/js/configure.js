@@ -118,7 +118,9 @@ var template = {
         if (event.geo) {
             geoUrl = "https://www.openstreetmap.org/?mlon=" + encodeURIComponent(event.geo.lon) + "&mlat=" + encodeURIComponent(event.geo.lat) + "&#map=15/" + encodeURIComponent(event.geo.lat) + "/" + encodeURIComponent(event.geo.lon);
         } else {
-            geoUrl = OSM_URL + encodeURIComponent(event.location);
+            // geoUrl = OSM_URL + encodeURIComponent(event.location);
+            // set geoUrl to just the event.location
+            geoUrl =  encodeURIComponent(event.location);
         }
         return makeLink(geoUrl, text);
     },
