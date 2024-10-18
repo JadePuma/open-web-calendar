@@ -122,7 +122,7 @@ var template = {
             // set geoUrl to just the event.location
             geoUrl =  "https://" + encodeURIComponent(event.location.replace("https://", ""));
         } else {
-            geoUrl = OSM_URL + encodeURIComponent(event.location);
+            geoUrl = GOOGLE_URL + encodeURIComponent(event.location);
         }
         return makeLink(geoUrl, text);
     },
