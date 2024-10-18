@@ -53,7 +53,7 @@ var OSM_URL = "https://www.openstreetmap.org/search?query=";
  * target according to the specification.
  */
 function makeLink(url, html) {
-  return "<a target='" + specification.target + "' href='" + escapeHtml(url) + "'>" + html + "</a>";
+  return "<a target='" + specification.target + "' href='https://" + escapeHtml(url) + "'>" + html + "</a>";
 }
 
 /*
@@ -120,7 +120,7 @@ var template = {
         } else {
             // geoUrl = OSM_URL + encodeURIComponent(event.location);
             // set geoUrl to just the event.location
-            geoUrl =  encodeURIComponent(event.location);
+            geoUrl =  encodeURIComponent(event.location.replace("https://", ""));
         }
         return makeLink(geoUrl, text);
     },
