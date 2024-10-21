@@ -46,7 +46,7 @@ for language in os.listdir(TRANSLATIONS_PATH):
         name = file.stem
         if name.endswith(UNUSED):
             name = name[: -len(UNUSED)]
-        with file.open() as f:  # Specify the encoding here
+        with file.open(encoding="utf-8") as f:  # Specify the encoding here
             file_translations[name].update(yaml.safe_load(f))
 
 
