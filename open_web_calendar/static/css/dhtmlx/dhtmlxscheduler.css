@@ -2755,7 +2755,8 @@
     content: "";
     display: block;
     flex-shrink: 0;
-    border-radius: var(--dhx-scheduler-month-event-marker-size);
+    /* border-radius: var(--dhx-scheduler-month-event-marker-size); */
+    border-radius: 100%;
     width: var(--dhx-scheduler-month-event-marker-size);
     height: var(--dhx-scheduler-month-event-marker-size);
     background: var(--dhx-scheduler-event-background);
@@ -2915,7 +2916,8 @@
     flex-shrink: 0;
     width: var(--dhx-scheduler-month-event-marker-size);
     height: var(--dhx-scheduler-month-event-marker-size);
-    border-radius: 2px;
+    /* border-radius: 2px; */
+    border-radius: 100%;
     background: var(--dhx-scheduler-base-colors-primary)
 }
 
