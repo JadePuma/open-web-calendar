@@ -87,6 +87,7 @@ test = [
 
 [project.scripts]
 open-web-calendar = "open_web_calendar:main"
+watch = "watchmedo auto-restart --patterns='*.py,*.yml' --recursive -- python your_script.py"
 
 [tool.hatch.metadata.hooks.vcs.urls]
 #[project.urls]
