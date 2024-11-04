@@ -313,7 +313,11 @@ function loadCalendar() {
      */
     scheduler.config.mark_now = true;
     // set the start of the week. See https://docs.dhtmlx.com/scheduler/api__scheduler_start_on_monday_config.html
-    scheduler.config.start_on_monday = specification["start_of_week"] != "su";
+    scheduler.config.start_on_monday = specification["start_of_week"] != "su" && specification["start_of_week"] != "weekend";
+    
+    
+    
+    
     let hour_division = parseInt(specification["hour_division"]);
     scheduler.config.hour_size_px = 44 * hour_division;
     scheduler.templates.hour_scale = function(date){
@@ -429,8 +433,32 @@ scheduler.date.add_agenda = function(date, inc){
  * See https://docs.dhtmlx.com/scheduler/custom_views.html
  */
 
+
+// Save the original function before overriding
+scheduler.date.original_week_start = scheduler.date.week_start;
+
+
+scheduler.date.week_start = function(date) {
+    if (specification["start_of_week"] == "weekend") {
+        // Find the next Saturday
+        var day = date.getDay();
+        return scheduler.date.add(date, (day <= 6 && day !== 0 ? 6 - day : 0), "day");
+    } else {
+        // Call the original week_start function or provide a default behavior
+        return scheduler.date.original_week_start(date);
+    }
+};
+
+
 scheduler.date.get_week_end=function(start_date){
-  return scheduler.date.add(start_date, specification["start_of_week"] == "work" ? 5 : 7,"day");
+    if(specification["start_of_week"] == "work") {
+        return scheduler.date.add(start_date, 5,"day");
+    } else if(specification["start_of_week"] == "weekend") {
+        console.log(start_date)
+        return scheduler.date.add(start_date, 2, "day");
+    } else {
+        return scheduler.date.add(start_date, 7,"day");
+    }
 }
 
 /* Customize the month view so the work week is displayed.
@@ -439,27 +467,46 @@ scheduler.date.get_week_end=function(start_date){
  */
 
 scheduler.ignore_month = function(date){
-  // 0 refers to Sunday, 6 - to Saturday
-  if (date.getDay() == 6 || date.getDay() == 0) {
-    return specification["start_of_week"] == "work";
-    //hides Saturdays and Sundays
-  }
-};
+    // 0 refers to Sunday, 6 - to Saturday
+    if (specification["start_of_week"] == "work") {
+      return date.getDay() == 6 || date.getDay() == 0; // hides Saturdays and Sundays
+    } else if (specification["start_of_week"] == "weekend") {
+      return date.getDay() >= 1 && date.getDay() <= 5; // hides Monday to Friday
+    }
+  };
 
 scheduler.attachEvent("onBeforeViewChange", function(old_mode, old_date, mode, date){
+    console.log(mode)
     // see https://docs.dhtmlx.com/scheduler/api__scheduler_onbeforeviewchange_event.html
     // see https://forum.dhtmlx.com/t/scheduler-date-add-day-not-getting-called/35633
     // see https://docs.dhtmlx.com/scheduler/day_view.html#comment-6411743964
-    if (mode == "day" && specification["start_of_week"] == "work") {
-      if (date.getDay() == 6) {
-        // Saturday, we come from Friday and go to Monday
-        scheduler.setCurrentView(scheduler.date.add(date, 2, "day"));
-        return false;
-      } else if (date.getDay() == 0) {
-        // Sunday, we come from Monday and go to Friday
-        scheduler.setCurrentView(scheduler.date.add(date, -2, "day"));
-        return false;
+    if (mode == "day") {
+      if (specification["start_of_week"] == "work") {
+        if (date.getDay() == 6) { // Saturday
+          scheduler.setCurrentView(scheduler.date.add(date, 2, "day")); // Skip to Monday
+          return false;
+        } else if (date.getDay() == 0) { // Sunday
+          scheduler.setCurrentView(scheduler.date.add(date, -2, "day")); // Skip to Friday
+          return false;
+        }
+      } else if (specification["start_of_week"] == "weekend") {
+        var currentDay = date.getDay();
+        var adjustment = 0;
+
+        if (currentDay >= 1 && currentDay <= 5) { // Monday to Friday
+            if (date > old_date) {
+                // Moving forward, find next Saturday
+                adjustment = 6 - currentDay; // Saturday is day 6
+            } else {
+                // Moving backward, find previous Sunday
+                adjustment = -currentDay; // Sunday is day 0
+            }
+            scheduler.setCurrentView(scheduler.date.add(date, adjustment, "day"));
+            return false;
+        }
       }
+    } else if (mode == "week") {
+      console.log("\n\n\n Week \n\n\n")
     }
     return true;
 });
