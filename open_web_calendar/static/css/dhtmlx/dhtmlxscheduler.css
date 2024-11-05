@@ -2967,6 +2967,10 @@
     padding-top:25px;
 }
 
+/* * {
+    font-size: 0.8rem !important;
+} */
+
 .dhx_year_wrapper {
     display: flex;
     gap: 40px;
