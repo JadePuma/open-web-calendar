@@ -105,15 +105,36 @@ div.dhx_agenda_line > span {
 }
 
 @media only screen and (max-width: 480px) {
+
+    /* The event height is the height of the screen divided by 24. */
     .event {
         height: 4.17vw;
+        min-height: fit-content;
         font-size: 2.92vw;
+        padding: 0.2em;
+    }
+
+    .event::before, .event .dhx_cal_event_clear_date {
+        display: none;
+    }
+
+    .event .dhx_cal_event_line_content {
+        word-wrap: break-word;
+        white-space: normal;
+        width: 100%;
+        overflow: visible;
     }
 
     .dhx_month_head {
         height: 6.5vw;
         font-size: 2.5vw;
         line-height: 3.75vw;
+    }
+    .dhx_cal_header .dhx_scale_bar{
+        font-size: 0.9em;
+    }
+    .dhx_cal_tab[data-tab], .dhx_cal_today_button[aria-label="Today"]{
+        display:none;
     }
 }
 
