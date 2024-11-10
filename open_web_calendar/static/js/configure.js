@@ -293,6 +293,7 @@ function loadCalendar() {
         limit: true,
         serialize: true,
     });
+    
     // set format of dates in the data source
     scheduler.config.xml_date="%Y-%m-%d %H:%i";
 
@@ -380,6 +381,8 @@ function loadCalendar() {
         }
         return event["css-classes"].map(escapeHtml).join(" ");
     };
+
+    scheduler.templates.month_scale_date = scheduler.date.date_to_str("%D");
 
     // set agenda date
     scheduler.templates.agenda_date = scheduler.templates.month_date;
