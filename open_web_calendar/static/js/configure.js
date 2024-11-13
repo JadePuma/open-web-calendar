@@ -297,6 +297,9 @@ function loadCalendar() {
     // set format of dates in the data source
     scheduler.config.xml_date="%Y-%m-%d %H:%i";
 
+    if (window.innerWidth < 480) {
+        scheduler.templates.month_scale_date = scheduler.date.date_to_str("%D");
+    }
     // responsive lightbox, see https://docs.dhtmlx.com/scheduler/touch_support.html
     scheduler.config.responsive_lightbox = true;
     resetConfig();
@@ -340,10 +343,15 @@ function loadCalendar() {
     scheduler.templates.event_bar_text = function(start, end, event){
         return template.plain_summary(event);
     }
-/*    scheduler.templates.event_bar_date = function(start, end, event){
+    
+/*    
+    scheduler.templates.event_bar_date = function(start, end, event){
       console.log("event_bar_date");
       return template.date(start, end) + template.categories(event);
-    }*/
+    }
+      */
+
+
     // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
     scheduler.templates.event_header = function(start, end, event){
         return joinHtmlLines([template.date(start, end), template.categories(event)]);
@@ -375,14 +383,18 @@ function loadCalendar() {
     }
 
     // general style
-    scheduler.templates.event_class=function(start,end,event){
+    scheduler.templates.event_class = function(start, end, event) {
         if (event.type == "error") {
             showEventError(event);
         }
-        return event["css-classes"].map(escapeHtml).join(" ");
+        // Optimize event retrieval by limiting to the day of the event
+        var dayStart = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+        var dayEnd = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59);
+        var evs = scheduler.getEvents(dayStart, dayEnd);
+        // console.log(evs, event);
+        return event["css-classes"].map(escapeHtml).join(" ") + (evs.length > 1 ? " multi-day" : "");
     };
 
-    scheduler.templates.month_scale_date = scheduler.date.date_to_str("%D");
 
     // set agenda date
     scheduler.templates.agenda_date = scheduler.templates.month_date;
@@ -417,6 +429,7 @@ function loadCalendar() {
 
     setLoader();
 }
+
 
 /* Agenda view
  *
@@ -466,7 +479,10 @@ scheduler.date.get_week_end=function(start_date){
 
 /* Customize the month view so the work week is displayed.
  *
- * See
+ * See   
+ *  // see https://docs.dhtmlx.com/scheduler/api__scheduler_onbeforeviewchange_event.html
+    // see https://forum.dhtmlx.com/t/scheduler-date-add-day-not-getting-called/35633
+    // see https://docs.dhtmlx.com/scheduler/day_view.html#comment-6411743964
  */
 
 scheduler.ignore_month = function(date){
@@ -478,11 +494,20 @@ scheduler.ignore_month = function(date){
     }
   };
 
+  /* Customize the month view to show x amounts of events.
+ *
+ * See   
+ *  https://docs.dhtmlx.com/scheduler/api__scheduler_max_month_events_config.html
+ */
+
+//   scheduler.config.max_month_events = 1;
+
+//   scheduler.templates.month_events_link = function(date, count){
+//     return "<a>See more("+count+")</a>";
+// };
+
+
 scheduler.attachEvent("onBeforeViewChange", function(old_mode, old_date, mode, date){
-    console.log(mode)
-    // see https://docs.dhtmlx.com/scheduler/api__scheduler_onbeforeviewchange_event.html
-    // see https://forum.dhtmlx.com/t/scheduler-date-add-day-not-getting-called/35633
-    // see https://docs.dhtmlx.com/scheduler/day_view.html#comment-6411743964
     if (mode == "day") {
       if (specification["start_of_week"] == "work") {
         if (date.getDay() == 6) { // Saturday
@@ -508,9 +533,7 @@ scheduler.attachEvent("onBeforeViewChange", function(old_mode, old_date, mode, d
             return false;
         }
       }
-    } else if (mode == "week") {
-      console.log("\n\n\n Week \n\n\n")
-    }
+    } 
     return true;
 });
 

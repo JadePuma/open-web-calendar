@@ -1210,6 +1210,11 @@
         height: 6vw;
         line-height: 6vw
     }
+
+    
+/* .dhx_month_link{
+    font-size: 0.9em;
+} */
 }
 
 .dhx_cal_tab:not(.active),
@@ -2970,6 +2975,7 @@
 /* * {
     font-size: 0.8rem !important;
 } */
+
 
 .dhx_year_wrapper {
     display: flex;

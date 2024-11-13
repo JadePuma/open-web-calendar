@@ -118,7 +118,7 @@ div.dhx_agenda_line > span {
         display: none;
     }
 
-    .event .dhx_cal_event_line_content {
+    .event:not(.multi-day) .dhx_cal_event_line_content {
         word-wrap: break-word;
         white-space: normal;
         width: 100%;
