@@ -104,7 +104,7 @@ div.dhx_agenda_line > span {
 	overflow: hidden;
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 900px) {
 
     /* The event height is the height of the screen divided by 24. */
     .event {
