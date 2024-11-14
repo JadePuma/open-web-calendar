@@ -104,9 +104,17 @@ div.dhx_agenda_line > span {
 	overflow: hidden;
 }
 
+.dhx_cal_scale_placeholder{
+    height: 2.2em !important;
+}
+
 @media only screen and (max-width: 900px) {
 
     /* The event height is the height of the screen divided by 24. */
+    .dhx_cal_header .dhx_scale_bar, .dhx_scheduler_week .dhx_cal_event .dhx_body, .dhx_scale_hour {
+        font-size: 0.9em;
+    }
+
     .event {
         height: 4.17vw;
         min-height: fit-content;
@@ -130,11 +138,22 @@ div.dhx_agenda_line > span {
         font-size: 2.5vw;
         line-height: 3.75vw;
     }
-    .dhx_cal_header .dhx_scale_bar{
-        font-size: 0.9em;
-    }
+
     .dhx_cal_tab[data-tab], .dhx_cal_today_button[aria-label="Today"]{
         display:none;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .dhx_scheduler_week .dhx_cal_event .dhx_event_move.dhx_title{
+        display: none;
+    }
+
+    .dhx_cal_agenda_event_line {
+        font-size: 0.95em;
+        padding-left: 0.5em;
+        margin-bottom: 2px;
+        gap: 4px;
     }
 }
 

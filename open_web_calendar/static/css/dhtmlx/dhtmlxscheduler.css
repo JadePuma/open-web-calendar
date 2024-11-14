@@ -3580,7 +3580,8 @@ div.dhx_timeline_label_column_header .dhx_timeline_label_content_wrapper {
     align-items: center;
     justify-content: start;
     gap: 16px;
-    padding: calc(var(--dhx-scheduler-base-padding)*2)
+    padding: calc(var(--dhx-scheduler-base-padding)*2);
+    margin-bottom: 2px;
 }
 
 .dhx_cal_agenda_event_line_selected {
