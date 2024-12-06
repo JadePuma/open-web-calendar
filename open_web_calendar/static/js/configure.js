@@ -540,9 +540,9 @@ scheduler.date.original_week_start = scheduler.date.week_start;
 
 scheduler.date.week_start = function (date) {
   if (specification["start_of_week"] == "weekend") {
-    // Find the next Saturday
+    // Always start the week on Saturday
     var day = date.getDay();
-    return scheduler.date.add(date, day <= 6 && day !== 0 ? 6 - day : 0, "day");
+    return scheduler.date.add(date, day !== 6 ? 6 - day : 0, "day");
   } else {
     // Call the original week_start function or provide a default behavior
     return scheduler.date.original_week_start(date);

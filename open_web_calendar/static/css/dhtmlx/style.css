@@ -152,10 +152,10 @@ div.dhx_agenda_line > span {
     .dhx_cal_agenda_event_line {
         font-size: 0.95em;
         padding-left: 0.5em;
-        margin-bottom: 2px;
         gap: 4px;
     }
 }
+
 
 /* The possible link in the title. */
 .dhx_cal_qi_tcontent a {
