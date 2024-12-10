@@ -108,17 +108,25 @@ div.dhx_agenda_line > span {
     height: 2.2em !important;
 }
 
+@media only screen and (min-width: 1000px) {
+    .dhx_cal_data{
+        margin-top:3px;
+    }
+}
+
 @media only screen and (max-width: 900px) {
 
     /* The event height is the height of the screen divided by 24. */
     .dhx_cal_header .dhx_scale_bar, .dhx_scheduler_week .dhx_cal_event .dhx_body, .dhx_scale_hour {
-        font-size: 0.9em;
+        /* font-size: 0.9rem; */
+        font-size: 14px;
     }
 
     .event {
         height: 4.17vw;
         min-height: fit-content;
-        font-size: 2.92vw;
+        /* font-size: 0.8rem; */
+        font-size: 14px;
         padding: 0.2em;
     }
 
@@ -135,7 +143,8 @@ div.dhx_agenda_line > span {
 
     .dhx_month_head {
         height: 6.5vw;
-        font-size: 2.5vw;
+        /* font-size: 2.5vw; */
+        font-size: 14px;
         line-height: 3.75vw;
     }
 
