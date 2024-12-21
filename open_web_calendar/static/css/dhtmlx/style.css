@@ -112,7 +112,9 @@ div.dhx_agenda_line>span {
 .hide-dot-and-time.dhx_cal_event_clear:before,
 .hide-dot-and-time.dhx_cal_qi_tcontent:before,
 .hide-dot-and-time.dhx_cal_agenda_event_line_marker,
-.hide-dot-and-time .dhx_cal_event_clear_date {
+.hide-dot-and-time .dhx_cal_event_clear_date,
+.hide-dot-and-time.dhx_cal_quick_info .dhx_cal_qi_title .dhx_cal_qi_tcontent:before,
+.hide-dot-and-time.dhx_cal_quick_info .dhx_cal_qi_title .dhx_cal_qi_tdate {
     display: none;
 }
 

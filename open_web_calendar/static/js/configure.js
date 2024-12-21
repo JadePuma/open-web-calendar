@@ -351,6 +351,14 @@ function loadCalendar() {
   resetConfig();
   scheduler.attachEvent("onBeforeViewChange", resetConfig);
   scheduler.attachEvent("onSchedulerResize", resetConfig);
+  scheduler.attachEvent("onQuickInfo", function(eventId) {
+    if (specification["hide_dot_and_time"]) {
+      var quickInfo = document.querySelector('.dhx_cal_quick_info');
+      if (quickInfo) {
+        quickInfo.classList.add('hide-dot-and-time');
+      }
+    }
+  });
 
   // set the skin, scheduler v7
   // see https://docs.dhtmlx.com/scheduler/skins.html#dark
