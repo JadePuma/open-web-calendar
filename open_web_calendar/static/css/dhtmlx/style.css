@@ -24,8 +24,8 @@
     display: inline-block;
 }
 
-#infoIcon { 
-    background-color: rgba(0,0,0,0.1);
+#infoIcon {
+    background-color: rgba(0, 0, 0, 0.1);
     display: none;
 }
 
@@ -77,7 +77,8 @@
     text-decoration: none;
 }
 
-.hidden, #scheduler_here .error {
+.hidden,
+#scheduler_here .error {
     display: none;
 }
 
@@ -93,31 +94,40 @@
 }
 
 .dhx_cal_qi_controls {
-  /* hide the delete and details button */
-  display: none
+    /* hide the delete and details button */
+    display: none
 }
 
-div.dhx_agenda_line > span {
+div.dhx_agenda_line>span {
     /* fixes vanishing of calendar entries in agenda view at narrow mobile viewport sizes */
-	display: block ruby !important;
-	text-overflow: ellipsis;
-	overflow: hidden;
+    display: block ruby !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
-.dhx_cal_scale_placeholder{
+.dhx_cal_scale_placeholder {
     height: 2.2em !important;
 }
 
+.hide-dot-and-time.dhx_cal_event_clear:before,
+.hide-dot-and-time.dhx_cal_qi_tcontent:before,
+.hide-dot-and-time.dhx_cal_agenda_event_line_marker,
+.hide-dot-and-time .dhx_cal_event_clear_date {
+    display: none;
+}
+
 @media only screen and (min-width: 1000px) {
-    .dhx_cal_data{
-        margin-top:3px;
+    .dhx_cal_data {
+        margin-top: 3px;
     }
 }
 
 @media only screen and (max-width: 900px) {
 
     /* The event height is the height of the screen divided by 24. */
-    .dhx_cal_header .dhx_scale_bar, .dhx_scheduler_week .dhx_cal_event .dhx_body, .dhx_scale_hour {
+    .dhx_cal_header .dhx_scale_bar,
+    .dhx_scheduler_week .dhx_cal_event .dhx_body,
+    .dhx_scale_hour {
         /* font-size: 0.9rem; */
         font-size: 14px;
     }
@@ -130,7 +140,8 @@ div.dhx_agenda_line > span {
         padding: 0.2em;
     }
 
-    .event::before, .event .dhx_cal_event_clear_date {
+    .event::before,
+    .event .dhx_cal_event_clear_date {
         display: none;
     }
 
@@ -148,13 +159,14 @@ div.dhx_agenda_line > span {
         line-height: 3.75vw;
     }
 
-    .dhx_cal_tab[data-tab], .dhx_cal_today_button[aria-label="Today"]{
-        display:none;
+    .dhx_cal_tab[data-tab],
+    .dhx_cal_today_button[aria-label="Today"] {
+        display: none;
     }
 }
 
 @media only screen and (max-width: 480px) {
-    .dhx_scheduler_week .dhx_cal_event .dhx_event_move.dhx_title{
+    .dhx_scheduler_week .dhx_cal_event .dhx_event_move.dhx_title {
         display: none;
     }
 
@@ -168,7 +180,7 @@ div.dhx_agenda_line > span {
 
 /* The possible link in the title. */
 .dhx_cal_qi_tcontent a {
-  color: inherit;
+    color: inherit;
 }
 
 /* Scheduler added a resize bar at the bottom. We do not allow edits so we remove it. */

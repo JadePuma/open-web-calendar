@@ -479,7 +479,8 @@ function loadCalendar() {
     // console.log(evs, event);
     return (
       event["css-classes"].map(escapeHtml).join(" ") +
-      (evs.length > 1 ? " multi-day" : "")
+      (evs.length > 1 ? " multi-day" : "") +
+      (specification["hide_dot_and_time"] ? " hide-dot-and-time" : "")
     );
   };
 
