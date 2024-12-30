@@ -324,6 +324,7 @@ function loadCalendar() {
    * see https://docs.dhtmlx.com/scheduler/settings_format.html
    * see https://docs.dhtmlx.com/scheduler/api__scheduler_hour_date_config.html
    */
+  console.log({specification});
   scheduler.config.hour_date = specification["hour_format"];
   var format = scheduler.date.date_to_str(scheduler.config.hour_date);
   setLocale(scheduler);
@@ -352,7 +353,7 @@ function loadCalendar() {
   scheduler.attachEvent("onBeforeViewChange", resetConfig);
   scheduler.attachEvent("onSchedulerResize", resetConfig);
   scheduler.attachEvent("onQuickInfo", function(eventId) {
-    if (specification["hide_dot_and_time"]) {
+    if (specification["event_hide_dot_and_time"]) {
       var quickInfo = document.querySelector('.dhx_cal_quick_info');
       if (quickInfo) {
         quickInfo.classList.add('hide-dot-and-time');
@@ -411,6 +412,14 @@ function loadCalendar() {
     ? parseDate(specification["date"])
     : new Date();
   scheduler.init("scheduler_here", date, specification["tab"]);
+
+
+  if(specification["custom_css"]){
+    var schedulerElement = document.getElementById("scheduler_here");
+    var styleElement = document.createElement("style");
+    styleElement.textContent = specification["custom_css"];
+    schedulerElement.parentNode.insertBefore(styleElement, schedulerElement);
+  }
 
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
   // see https://docs.dhtmlx.com/scheduler/api__scheduler_event_bar_text_template.html
