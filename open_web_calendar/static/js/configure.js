@@ -413,13 +413,16 @@ function loadCalendar() {
     : new Date();
   scheduler.init("scheduler_here", date, specification["tab"]);
 
+  var schedulerElement = document.getElementById("scheduler_here");
+
 
   if(specification["custom_css"]){
-    var schedulerElement = document.getElementById("scheduler_here");
     var styleElement = document.createElement("style");
     styleElement.textContent = specification["custom_css"];
     schedulerElement.parentNode.insertBefore(styleElement, schedulerElement);
   }
+
+  document.body.setAttribute("data-use-theme-settings", specification["use_theme_settings"]);
 
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
   // see https://docs.dhtmlx.com/scheduler/api__scheduler_event_bar_text_template.html
