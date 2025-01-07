@@ -70,15 +70,6 @@ cache = Cache(app, config=CACHE_CONFIG)
 
 __URL_CACHE = {}
 
-import logging
-
-# Configure logging at the start of your file
-logging.basicConfig(level=logging.DEBUG)
-
-# Replace print statements with logging
-logging.debug("DEBUG: url_specification_response = %s", url_specification_response)
-logging.debug("DEBUG: url_specification_values = %s", url_specification_values)
-
 
 # limiting access
 def host_not_allowed():
@@ -189,16 +180,7 @@ def get_specification(query=None):
             url_specification_values = json.loads(url_specification_response)
         except json.JSONDecodeError:
             url_specification_values = yaml.safe_load(url_specification_response)
-
-        # Debugging: Log the response
-        print("DEBUG: url_specification_response =", url_specification_response)
-        print("DEBUG: url_specification_values =", url_specification_values)
-
-        # Ensure it's a dictionary
-        if isinstance(url_specification_values, dict):
-            specification.update(url_specification_values)
-        else:
-            raise ValueError("Expected a dictionary for specification update.")
+        specification.update(url_specification_values)
     for parameter in query:
         # get a list of arguments
         # see https://web.archive.org/web/20230325034825/https://werkzeug.palletsprojects.com/en/0.14.x/datastructures/
