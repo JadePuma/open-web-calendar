@@ -423,6 +423,8 @@ function loadCalendar() {
   }
 
   document.body.setAttribute("data-use-theme-settings", specification["use_theme_settings"]);
+  document.body.setAttribute("data-dynamic-height", specification["dynamic_height"]);
+  
 
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
   // see https://docs.dhtmlx.com/scheduler/api__scheduler_event_bar_text_template.html
