@@ -422,8 +422,8 @@ function loadCalendar() {
     schedulerElement.parentNode.insertBefore(styleElement, schedulerElement);
   }
 
-  document.body.setAttribute("data-use-theme-settings", specification["use_theme_settings"]);
-  document.body.setAttribute("data-dynamic-height", specification["dynamic_height"]);
+  document.body.setAttribute("data-use-theme-settings", specification["use_theme_settings"] || "false");
+  document.body.setAttribute("data-dynamic-height", specification["dynamic_height"] || "false");
   
 
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
