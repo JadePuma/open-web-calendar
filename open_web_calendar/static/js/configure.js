@@ -413,8 +413,7 @@ function loadCalendar() {
     : new Date();
   scheduler.init("scheduler_here", date, specification["tab"]);
 
-  var schedulerElement = document.getElementById("scheduler_here");
-
+  var schedulerElement = document.getElementById("scheduler_here");  
 
   if(specification["custom_css"]){
     var styleElement = document.createElement("style");
@@ -422,7 +421,6 @@ function loadCalendar() {
     schedulerElement.parentNode.insertBefore(styleElement, schedulerElement);
   }
 
-  document.body.setAttribute("data-use-theme-settings", specification["use_theme_settings"] || "false");
   document.body.setAttribute("data-dynamic-height", specification["dynamic_height"] || "false");
   
 
@@ -498,11 +496,39 @@ function loadCalendar() {
       59
     );
     var evs = scheduler.getEvents(dayStart, dayEnd);
-    // console.log(evs, event);
+
+    if (specification["show_only_event_times"]) {
+      console.log(specification["hour_format"]);
+      const hourFormat = specification["hour_format"]
+        .replace('%g', 'numeric')  // 12-hour without leading zero
+        .replace('%h', '2-digit')  // 12-hour with leading zero
+        .replace('%H', '2-digit')  // 24-hour with leading zero
+        .replace('%G', 'numeric')  // 24-hour without leading zero
+        .replace('%i', '2-digit'); // minutes with leading zero
+      const showAmPm = specification["hour_format"].includes('%a') || specification["hour_format"].includes('%A');
+      const amPmCase = showAmPm ? (specification["hour_format"].includes('%a') ? 'lowercase' : 'uppercase') : 'none';
+
+      const hour12 = specification["hour_format"].includes('%g') || specification["hour_format"].includes('%h');
+      let startTime = new Date(event.start_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
+      let endTime = new Date(event.end_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
+
+      if(!showAmPm){
+        startTime = startTime.replace(/(AM|PM)/i, '');
+        endTime = endTime.replace(/(AM|PM)/i, '');
+      } else if (amPmCase === 'lowercase') {
+        startTime = startTime.replace(' AM', 'am').replace(' PM', 'pm');
+        endTime = endTime.replace(' AM', 'am').replace(' PM', 'pm');
+      } else {
+        startTime = startTime.replace(' AM', 'AM').replace(' PM', 'PM');
+        endTime = endTime.replace(' AM', 'AM').replace(' PM', 'PM');
+      }
+
+      event.text = `${startTime} - ${endTime}`;
+    }
     return (
       event["css-classes"].map(escapeHtml).join(" ") +
       (evs.length > 1 ? " multi-day" : "") +
-      (specification["hide_dot_and_time"] ? " hide-dot-and-time" : "")
+      (specification["hide_dot_and_time"] || specification["show_only_event_times"] ? " hide-dot-and-time" : "")
     );
   };
 
