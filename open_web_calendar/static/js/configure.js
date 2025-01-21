@@ -528,7 +528,7 @@ function loadCalendar() {
     return (
       event["css-classes"].map(escapeHtml).join(" ") +
       (evs.length > 1 ? " multi-day" : "") +
-      (specification["hide_dot_and_time"] || specification["show_only_event_times"] ? " hide-dot-and-time" : "")
+      (specification["hide_dot_and_time"] || specification?.show_only_event_times ? " hide-dot-and-time" : "")
     );
   };
 
