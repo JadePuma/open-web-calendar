@@ -6,6 +6,7 @@
 
 import io
 import json
+import logging
 import os
 import tempfile
 import traceback
@@ -29,6 +30,9 @@ from flask_caching import Cache
 from . import translate, version
 from .convert_to_dhtmlx import ConvertToDhtmlx
 from .convert_to_ics import ConvertToICS
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 # configuration
 DEBUG = os.environ.get("APP_DEBUG", "true").lower() == "true"
@@ -69,6 +73,18 @@ cache = Cache(app, config=CACHE_CONFIG)
 # caching
 
 __URL_CACHE = {}
+
+
+@app.before_request
+def log_request():
+    logging.info("Request URL: %s", request.url)
+    logging.info("Request Host: %s", request.host)
+
+
+@app.after_request
+def log_response(response):
+    logging.info("Response Location: %s", response.headers.get("Location"))
+    return response
 
 
 # limiting access
