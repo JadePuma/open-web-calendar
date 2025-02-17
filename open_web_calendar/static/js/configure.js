@@ -373,21 +373,19 @@ function loadCalendar() {
   scheduler.config.mark_now = true;
 
   // date format for week view for mobile
-//   scheduler.templates.week_date = function (date) {
-//     const mobile = window.innerWidth < 480;
-//     var dateToStr_func = scheduler.date.date_to_str(mobile ? "%d %M" : "%d %M %Y");
-//     console.log(dateToStr_func(date), scheduler.config.week_date);
-//     return dateToStr_func(date);
-//   };
+  scheduler.templates.week_date = function (start, end) {
+    var dateToStr_func = scheduler.date.date_to_str("%d %M");
+    return dateToStr_func(start) + " – " + dateToStr_func(end);
+  };
 
 
-//   scheduler.config.week_date = mobile ? "%d %M" : scheduler.config.week_date;
-//   scheduler.templates.week_date = function (date) {
-//     var mobileFormat = "%d %M"; // Example: "01 Jan"
-//     var dateToStr_func = scheduler.date.date_to_str(mobile ? mobileFormat : scheduler.config.week_date);
-//     console.log(dateToStr_func(date), scheduler.config.week_date);
-//     return dateToStr_func(date);
-//   };
+  // scheduler.config.week_date = mobile ? "%d %M" : scheduler.config.week_date;
+  // scheduler.templates.week_date = function (date) {
+  //   var mobileFormat = "%d %M"; // Example: "01 Jan"
+  //   var dateToStr_func = scheduler.date.date_to_str(mobile ? mobileFormat : scheduler.config.week_date);
+  //   console.log(dateToStr_func(date), scheduler.config.week_date);
+  //   return dateToStr_func(date);
+  // };
 
   // set the start of the week. See https://docs.dhtmlx.com/scheduler/api__scheduler_start_on_monday_config.html
   scheduler.config.start_on_monday =
@@ -498,7 +496,6 @@ function loadCalendar() {
     var evs = scheduler.getEvents(dayStart, dayEnd);
 
     if (specification["show_only_event_times"]) {
-      console.log(specification["hour_format"]);
       const hourFormat = specification["hour_format"]
         .replace('%g', 'numeric')  // 12-hour without leading zero
         .replace('%h', '2-digit')  // 12-hour with leading zero

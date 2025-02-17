@@ -118,13 +118,38 @@ div.dhx_agenda_line>span {
     display: none;
 }
 
+
+.dhx_cal_event_clear, .dhx_cal_month_table{
+    transform:translateY(10px);
+}
+
+.dhx_cal_data {
+    /* Custom scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.dhx_cal_data::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dhx_cal_data::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.dhx_cal_data::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
 @media only screen and (min-width: 1000px) {
     .dhx_cal_data {
         margin-top: 3px;
     }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 480px) {
 
     /* The event height is the height of the screen divided by 24. */
     .dhx_cal_header .dhx_scale_bar,
