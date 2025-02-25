@@ -33,14 +33,20 @@ class ConvertToDhtmlx(ConversionStrategy):
     """
 
     def created(self):
-        """Set attribtues when created."""
+        """Set attributes when created."""
         logging.info("super cool message")
         logging.info(self.specification["timezone"])
 
-        try:
-            self.timezone = pytz.timezone(self.specification["timezone"])
-        except pytz.UnknownTimeZoneError:
-            self.timezone = pytz.FixedOffset(-int(self.specification["timeshift"]))
+        timezone_spec = self.specification["timezone"]
+        # Handle empty string or invalid timezone
+        if not timezone_spec or not isinstance(timezone_spec, str):
+            self.timezone = pytz.UTC
+        else:
+            try:
+                self.timezone = pytz.timezone(timezone_spec)
+            except pytz.UnknownTimeZoneError:
+                self.timezone = pytz.FixedOffset(-int(self.specification["timeshift"]))
+
         self.today = today = (
             parse_date(self.specification["date"])
             if self.specification.get("date")

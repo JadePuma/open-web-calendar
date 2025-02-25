@@ -33,7 +33,9 @@ function shallowCopy(object) {
 
 function getTimezone() {
     // see https://stackoverflow.com/a/37512371
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log("timezone", timezone);
+    return timezone;
 }
 
 function fillTimezoneUIElements(defaultTimeZone) {

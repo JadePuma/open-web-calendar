@@ -121,3 +121,5 @@ linkchecker-out.html
 /scheduler
 
 *.code-workspace
+
+watch.py
