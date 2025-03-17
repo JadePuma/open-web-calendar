@@ -118,10 +118,36 @@ var template = {
     return summary;
   },
   details: function (event) {
+    if(event?.ical){      
+      // Correctly formats links in the description from ical data
+      if ((typeof event.ical === 'string' && event.ical.includes('DESCRIPTION:') && event.ical.includes("http")) && !event.description.includes("<a")) {
+        try {
+          const descriptionMatch = event.ical.match(/DESCRIPTION:(.*?)(?=\r\n[A-Z]+:|$)/s);
+          
+          if (descriptionMatch && descriptionMatch[1]) {
+            let descriptionText = descriptionMatch[1];
+            
+            descriptionText = descriptionText.replace(/\r\n /g, '');
+            
+            descriptionText = descriptionText.replace(/\\n/g, '\n');
+            
+            descriptionText = descriptionText.replace(/([^\s]+)<(https?:\/\/[^>]+)>/g, function(match, text, url) {
+              return `<a href="${url}">${text}</a>`;
+            });
+            
+            descriptionText = descriptionText.replace(/\n/g, '<br>');
+            event.description = descriptionText;
+          }
+        } catch (e) {
+          console.error("Error parsing iCal description:", e);
+        }
+      }
+    }
+    
     var details = document.createElement("div");
     details.classList.add("details");
     details.innerHTML = event.description;
-    // set the target of all the links
+    // Set the target of all the links
     var links = details.getElementsByTagName("a");
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
