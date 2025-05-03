@@ -376,10 +376,28 @@ function loadCalendar() {
 
     // general style
     scheduler.templates.event_class=function(start,end,event){
+      // if multiple events in one day, don't add class, else add single-event class
         if (event.type == "error") {
             showEventError(event);
         }
-        return event["css-classes"].map(escapeHtml).join(" ");
+        
+        // Get start date with time stripped to compare just the day
+        var eventDate = new Date(start);
+        eventDate.setHours(0,0,0,0);
+        
+        // Check how many events are on this day
+        var eventsOnSameDay = 0;
+        scheduler.getEvents().forEach(function(ev) {
+            var evStart = new Date(ev.start_date);
+            evStart.setHours(0,0,0,0);
+            
+            if (evStart.getTime() === eventDate.getTime()) {
+                eventsOnSameDay++;
+            }
+        });
+        
+        var classes = event["css-classes"].map(escapeHtml).join(" ");
+        return eventsOnSameDay === 1 ? classes + " single-event" : classes;
     };
 
     scheduler.templates.month_scale_date = scheduler.date.date_to_str("%D");

@@ -2741,6 +2741,24 @@
     text-overflow: ellipsis
 }
 
+.single-event {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height:fit-content;
+}
+
+.single-event .dhx_cal_event_line_content {
+    white-space: normal !important;
+    overflow: hidden !important;
+    text-overflow: unset !important;
+    max-height: 50px;
+}
+
+.single-event.dhx_cal_event_clear:before {
+    display: none;
+}
+
 .dhx_cal_event_marker {
     display: block;
     flex-shrink: 0;
