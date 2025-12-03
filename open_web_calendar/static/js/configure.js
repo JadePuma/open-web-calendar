@@ -268,15 +268,19 @@ function showEventError(error) {
 
 function disableLoader() {
   var loader = document.getElementById("loader");
-  loader.classList.add("hidden");
+  if(loader) {
+    loader.classList.add("hidden");
+  }
 }
 
 function setLoader() {
-  if (specification.loader) {
+  if (specification?.loader) {
     var loader = document.getElementById("loader");
-    var url = specification.loader.replace(/'/g, "%27");
-    loader.style.cssText +=
-      "background:url('" + url + "') center center no-repeat;";
+    if(loader) {
+      var url = specification.loader.replace(/'/g, "%27");
+      loader.style.cssText +=
+        "background:url('" + url + "') center center no-repeat;";
+    }
   } else {
     disableLoader();
   }
