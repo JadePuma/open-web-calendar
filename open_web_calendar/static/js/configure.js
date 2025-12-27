@@ -135,6 +135,11 @@ var template = {
               return `<a href="${url}">${text}</a>`;
             });
             
+            // Remove LAST-MODIFIED if it leaked into the description
+            // The parser in some backends or this regex might catch it.
+            // Matches newlines followed by LAST-MODIFIED:timestamp until the end or next section.
+            descriptionText = descriptionText.replace(/(?:[\r\n]+)LAST-MODIFIED:\d{8}T\d{6}Z[\s\S]*/, "");
+            
             descriptionText = descriptionText.replace(/\n/g, '<br>');
             event.description = descriptionText;
           }

@@ -3,4 +3,4 @@ activate-env:
 	source ENV/Scripts/activate
 
 dev:
-	watchmedo auto-restart --patterns="*.py,*.css,*.js" --recursive -- python3 app.py
+	ENV/Scripts/watchmedo auto-restart --patterns="*.py,*.css,*.js" --recursive -- ENV/Scripts/python app.py
