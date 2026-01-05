@@ -118,28 +118,35 @@ var template = {
     return summary;
   },
   details: function (event) {
-    if(event?.ical){      
+
+    if (event?.ical) {
       // Correctly formats links in the description from ical data
       if ((typeof event.ical === 'string' && event.ical.includes('DESCRIPTION:') && event.ical.includes("http")) && !event.description.includes("<a")) {
         try {
           const descriptionMatch = event.ical.match(/DESCRIPTION:(.*?)(?=\r\n[A-Z]+:|$)/s);
-          
-          if (descriptionMatch && descriptionMatch[1]) {
+
+          if (!!(descriptionMatch && descriptionMatch[1])) {
             let descriptionText = descriptionMatch[1];
-            
+
             descriptionText = descriptionText.replace(/\r\n /g, '');
-            
+
             descriptionText = descriptionText.replace(/\\n/g, '\n');
-            
-            descriptionText = descriptionText.replace(/([^\s]+)<(https?:\/\/[^>]+)>/g, function(match, text, url) {
+
+            descriptionText = descriptionText.replace(/(?:[\r\n]+)LAST-MODIFIED:\d{8}T\d{6}Z[\s\S]*/, "");
+
+            // First, replace markdown-style links if present
+            descriptionText = descriptionText.replace(/([^\s]+)<(https?:\/\/[^>]+)>/g, function (match, text, url) {
               return `<a href="${url}">${text}</a>`;
             });
-            
-            // Remove LAST-MODIFIED if it leaked into the description
-            // The parser in some backends or this regex might catch it.
-            // Matches newlines followed by LAST-MODIFIED:timestamp until the end or next section.
-            descriptionText = descriptionText.replace(/(?:[\r\n]+)LAST-MODIFIED:\d{8}T\d{6}Z[\s\S]*/, "");
-            
+
+            // Then, add automatic linking for any bare URLs
+            descriptionText = descriptionText.replace(
+              /(\bhttps?:\/\/[^\s<>"']+)/g,
+              function (match, url) {
+                return `<a href="${url}">${url}</a>`;
+              }
+            );
+
             descriptionText = descriptionText.replace(/\n/g, '<br>');
             event.description = descriptionText;
           }
@@ -148,7 +155,7 @@ var template = {
         }
       }
     }
-    
+
     var details = document.createElement("div");
     details.classList.add("details");
     details.innerHTML = event.description;
@@ -220,7 +227,7 @@ var template = {
  * scheduler.locale is used to load the locale.
  * This creates the required interface.
  */
-var setLocale = function () {};
+var setLocale = function () { };
 var Scheduler = {
   plugin: function (setLocale_) {
     // this is called by the locale_??.js files.
@@ -273,7 +280,7 @@ function showEventError(error) {
 
 function disableLoader() {
   var loader = document.getElementById("loader");
-  if(loader) {
+  if (loader) {
     loader.classList.add("hidden");
   }
 }
@@ -281,7 +288,7 @@ function disableLoader() {
 function setLoader() {
   if (specification?.loader) {
     var loader = document.getElementById("loader");
-    if(loader) {
+    if (loader) {
       var url = specification.loader.replace(/'/g, "%27");
       loader.style.cssText +=
         "background:url('" + url + "') center center no-repeat;";
@@ -359,7 +366,7 @@ function loadCalendar() {
    * see https://docs.dhtmlx.com/scheduler/settings_format.html
    * see https://docs.dhtmlx.com/scheduler/api__scheduler_hour_date_config.html
    */
-  console.log({specification});
+  console.log({ specification });
   scheduler.config.hour_date = specification["hour_format"];
   var format = scheduler.date.date_to_str(scheduler.config.hour_date);
   setLocale(scheduler);
@@ -387,7 +394,7 @@ function loadCalendar() {
   resetConfig();
   scheduler.attachEvent("onBeforeViewChange", resetConfig);
   scheduler.attachEvent("onSchedulerResize", resetConfig);
-  scheduler.attachEvent("onQuickInfo", function(eventId) {
+  scheduler.attachEvent("onQuickInfo", function (eventId) {
     if (specification["event_hide_dot_and_time"]) {
       var quickInfo = document.querySelector('.dhx_cal_quick_info');
       if (quickInfo) {
@@ -446,16 +453,16 @@ function loadCalendar() {
     : new Date();
   scheduler.init("scheduler_here", date, specification["tab"]);
 
-  var schedulerElement = document.getElementById("scheduler_here");  
+  var schedulerElement = document.getElementById("scheduler_here");
 
-  if(specification["custom_css"]){
+  if (specification["custom_css"]) {
     var styleElement = document.createElement("style");
     styleElement.textContent = specification["custom_css"];
     schedulerElement.parentNode.insertBefore(styleElement, schedulerElement);
   }
 
   document.body.setAttribute("data-dynamic-height", specification["dynamic_height"] || "false");
-  
+
 
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
   // see https://docs.dhtmlx.com/scheduler/api__scheduler_event_bar_text_template.html
@@ -544,7 +551,7 @@ function loadCalendar() {
       let startTime = new Date(event.start_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
       let endTime = new Date(event.end_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
 
-      if(!showAmPm){
+      if (!showAmPm) {
         startTime = startTime.replace(/(AM|PM)/i, '');
         endTime = endTime.replace(/(AM|PM)/i, '');
       } else if (amPmCase === 'lowercase') {
@@ -566,31 +573,31 @@ function loadCalendar() {
 
   // set agenda date
   scheduler.templates.agenda_date = scheduler.templates.month_date;
-    // general style
-    scheduler.templates.event_class=function(start,end,event){
-      // if multiple events in one day, don't add class, else add single-event class
-        if (event.type == "error") {
-            showEventError(event);
-        }
-        
-        // Get start date with time stripped to compare just the day
-        var eventDate = new Date(start);
-        eventDate.setHours(0,0,0,0);
-        
-        // Check how many events are on this day
-        var eventsOnSameDay = 0;
-        scheduler.getEvents().forEach(function(ev) {
-            var evStart = new Date(ev.start_date);
-            evStart.setHours(0,0,0,0);
-            
-            if (evStart.getTime() === eventDate.getTime()) {
-                eventsOnSameDay++;
-            }
-        });
-        
-        var classes = event["css-classes"].map(escapeHtml).join(" ");
-        return eventsOnSameDay === 1 ? classes + " single-event" : classes;
-    };
+  // general style
+  scheduler.templates.event_class = function (start, end, event) {
+    // if multiple events in one day, don't add class, else add single-event class
+    if (event.type == "error") {
+      showEventError(event);
+    }
+
+    // Get start date with time stripped to compare just the day
+    var eventDate = new Date(start);
+    eventDate.setHours(0, 0, 0, 0);
+
+    // Check how many events are on this day
+    var eventsOnSameDay = 0;
+    scheduler.getEvents().forEach(function (ev) {
+      var evStart = new Date(ev.start_date);
+      evStart.setHours(0, 0, 0, 0);
+
+      if (evStart.getTime() === eventDate.getTime()) {
+        eventsOnSameDay++;
+      }
+    });
+
+    var classes = event["css-classes"].map(escapeHtml).join(" ");
+    return eventsOnSameDay === 1 ? classes + " single-event" : classes;
+  };
 
   schedulerUrl =
     document.location.pathname.replace(/.html$/, ".events.json") +
