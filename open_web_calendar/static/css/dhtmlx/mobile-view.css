@@ -1,0 +1,400 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Nicco Kunzmann and Open Web Calendar Contributors <https://open-web-calendar.quelltext.eu/>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only
+ */
+
+#owc-mobile-shell {
+    display: none;
+}
+
+body.owc-mobile-active #owc-mobile-shell {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    background: var(--dhx-scheduler-container-background);
+    color: var(--dhx-scheduler-container-color);
+    font-family: var(--dhx-scheduler-font-family);
+}
+
+.owc-mobile-calendar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+}
+
+.owc-mobile-month-header,
+.owc-mobile-weekday-row {
+    flex-shrink: 0;
+}
+
+.owc-mobile-month-header {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    border-bottom: var(--dhx-scheduler-default-border);
+}
+
+.owc-mobile-month-title {
+    flex: 1 1 auto;
+    font-size: var(--dhx-scheduler-heading-font-size);
+    font-weight: var(--dhx-scheduler-heading-font-weight);
+    line-height: 1.3;
+    text-align: center;
+}
+
+.owc-mobile-header-spacer {
+    flex: 1 1 auto;
+}
+
+.owc-mobile-today {
+    align-items: center;
+    border: var(--dhx-scheduler-btn-border);
+    border-color: var(--dhx-scheduler-btn-border-color);
+    border-radius: var(--dhx-scheduler-border-radius);
+    background: var(--dhx-scheduler-btn-background);
+    color: var(--dhx-scheduler-btn-color);
+    cursor: pointer;
+    display: inline-flex;
+    font: inherit;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.75rem;
+}
+
+/* Today button is intentionally inert on hover — only the cursor reflects that
+   it's clickable. Pin every hover-state property back to the base value to
+   neutralize any inherited rule (e.g. dhtmlx button hover variables). */
+/* .owc-mobile-today:hover {
+    background: var(--dhx-scheduler-btn-background);
+    color: var(--dhx-scheduler-btn-color);
+    border-color: var(--dhx-scheduler-btn-border-color);
+} */
+
+/* Mobile month nav arrows reuse the native .dhx_cal_prev_button / .dhx_cal_next_button
+   icon glyph + sizing, but the circular border is stripped per user request.
+   Background is intentionally left alone so the native button surface remains
+   (so the icon stays color-themable via dhtmlx vars). */
+.owc-mobile-nav-button {
+    min-height: 44px;
+    min-width: 44px;
+    flex-shrink: 0;
+    border: 0;
+}
+
+.owc-mobile-weekday-row,
+.owc-mobile-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.owc-mobile-weekday-row {
+    border-bottom: var(--dhx-scheduler-default-border);
+}
+
+.owc-mobile-weekday {
+    box-sizing: border-box;
+    color: var(--dhx-scheduler-scale-color);
+    font-size: var(--dhx-scheduler-caption-font-size);
+    font-weight: var(--dhx-scheduler-caption-font-weight);
+    min-height: 32px;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+}
+
+.owc-mobile-month-grid {
+    flex-shrink: 0;
+    border-bottom: var(--dhx-scheduler-default-border);
+}
+
+.owc-mobile-day-cell {
+    align-items: center;
+    background: var(--dhx-scheduler-timescale-background);
+    border: 0;
+    border-bottom: var(--dhx-scheduler-default-border);
+    border-right: var(--dhx-scheduler-default-border);
+    box-sizing: border-box;
+    color: var(--dhx-scheduler-month-header-color);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.375rem 0.25rem;
+    position: relative;
+}
+
+.owc-mobile-day-cell:nth-child(7n) {
+    border-right: 0;
+}
+
+.owc-mobile-day-cell.is-today {
+    background: var(--dhx-scheduler-timescale-today-background);
+}
+
+/* Selected-day border uses currentColor so it tracks whatever the cell's
+   `color` resolves to. styleConfig.js maps the Grid Text setting onto
+   .owc-mobile-day-cell `color`, so this border follows that theme value. */
+.owc-mobile-day-cell.is-selected {
+    box-shadow: inset 0 0 0 2px currentColor;
+}
+
+.owc-mobile-day-cell.is-other-month {
+    opacity: 0.4;
+}
+
+.owc-mobile-date-number {
+    font-size: var(--dhx-scheduler-caption-font-size);
+    font-weight: var(--dhx-scheduler-caption-font-weight);
+    line-height: 1;
+}
+
+.owc-mobile-dot-row {
+    align-items: center;
+    display: flex;
+    gap: 0.1875rem;
+    justify-content: center;
+    min-height: 0.5rem;
+}
+
+.owc-mobile-event-dot {
+    background: var(--dhx-scheduler-event-background);
+    border-radius: 50%;
+    display: block;
+    height: 0.375rem;
+    width: 0.375rem;
+}
+
+.owc-mobile-more-count {
+    color: var(--dhx-scheduler-month-header-color);
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.owc-mobile-day-list {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.75rem;
+}
+
+.owc-mobile-selected-date {
+    color: var(--dhx-scheduler-container-color);
+    font-size: var(--dhx-scheduler-heading-font-size);
+    font-weight: var(--dhx-scheduler-heading-font-weight);
+    margin: 0 0 0.25rem;
+}
+
+.owc-mobile-day-list-item {
+    align-items: flex-start;
+    background: var(--dhx-scheduler-event-background);
+    border: 0;
+    border-radius: var(--dhx-scheduler-border-radius);
+    box-sizing: border-box;
+    color: var(--dhx-scheduler-event-color);
+    cursor: pointer;
+    display: flex;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0.75rem;
+    text-align: left;
+    width: 100%;
+}
+
+.owc-mobile-event-time {
+    flex: 0 0 auto;
+    font-size: var(--dhx-scheduler-caption-font-size);
+    font-weight: var(--dhx-scheduler-caption-font-weight);
+    line-height: 1.4;
+    max-width: 5rem;
+}
+
+.owc-mobile-event-summary {
+    flex: 1 1 auto;
+    font-size: var(--dhx-scheduler-font-size);
+    font-weight: var(--dhx-scheduler-font-weight);
+    line-height: 1.4;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.owc-mobile-empty-state {
+    align-items: center;
+    color: var(--dhx-scheduler-empty-data-color);
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 6rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.owc-mobile-event-modal,
+.owc-mobile-event-list-modal {
+    align-items: center;
+    bottom: 0;
+    display: none;
+    justify-content: center;
+    left: 0;
+    padding: 1rem;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 200;
+}
+
+/* Event modal sits above the list modal so an event chosen from the list
+   renders on top of the list */
+.owc-mobile-event-modal {
+    z-index: 210;
+}
+
+.owc-mobile-event-modal.is-open,
+.owc-mobile-event-list-modal.is-open {
+    display: flex;
+}
+
+.owc-mobile-modal-backdrop {
+    background: rgba(0, 0, 0, 0.45);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.owc-mobile-modal-card {
+    background: var(--dhx-scheduler-popup-background);
+    border: var(--dhx-scheduler-popup-border);
+    border-radius: var(--dhx-scheduler-border-radius);
+    box-shadow: var(--dhx-scheduler-box-shadow-m);
+    box-sizing: border-box;
+    color: var(--dhx-scheduler-popup-color);
+    max-height: 80%;
+    max-width: 90%;
+    min-width: min(20rem, 100%);
+    overflow-y: auto;
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+}
+
+.owc-mobile-modal-close {
+    background: transparent;
+    border: 0;
+    color: var(--dhx-scheduler-popup-color);
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0;
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}
+
+.owc-mobile-modal-title {
+    font-size: var(--dhx-scheduler-heading-font-size);
+    font-weight: var(--dhx-scheduler-heading-font-weight);
+    line-height: 1.4;
+    padding-right: 2.5rem;
+}
+
+.owc-mobile-modal-date {
+    color: var(--dhx-scheduler-secondary-color);
+    font-size: var(--dhx-scheduler-caption-font-size);
+    margin-top: 0.5rem;
+}
+
+.owc-mobile-modal-content {
+    line-height: 1.5;
+    margin-top: 1rem;
+}
+
+.owc-mobile-modal-link {
+    margin-top: 1rem;
+}
+
+.owc-mobile-modal-link a {
+    color: var(--dhx-scheduler-base-colors-primary);
+}
+
+.owc-mobile-month-header *,
+.owc-mobile-weekday-row *,
+.owc-mobile-day-list *,
+.owc-mobile-event-modal *,
+.owc-mobile-event-list-modal * {
+    box-sizing: border-box;
+}
+
+/* Day-list modal (used when a week-view cluster badge is clicked) */
+.owc-mobile-list-modal-title {
+    font-size: var(--dhx-scheduler-heading-font-size);
+    font-weight: var(--dhx-scheduler-heading-font-weight);
+    line-height: 1.4;
+    margin: 0 0 0.75rem;
+    padding-right: 2.5rem;
+}
+
+.owc-mobile-list-modal-content {
+    margin-top: 0.5rem;
+}
+
+.owc-mobile-list-modal-content .owc-mobile-day-list {
+    padding: 0;
+    gap: 0.5rem;
+}
+
+/* Cluster badge — injected into the native scheduler week/day view when a single
+   day has 2+ events. Sized to the anchor event's column width via inline `width`
+   set in mobile-view.js, so it never bleeds into adjacent days. Click opens the
+   day-list modal.
+
+   Colors use --dhx-scheduler-event-* so they match real events and respond to
+   theme overrides cascaded from styleConfig.js (event_background / event_text). */
+.owc-mobile-week-cluster {
+    background: var(--dhx-scheduler-event-background);
+    color: var(--dhx-scheduler-event-color);
+    border: var(--dhx-scheduler-event-border);
+    border-radius: var(--dhx-scheduler-border-radius);
+    cursor: pointer;
+    display: block;
+    font-size: var(--dhx-scheduler-event-bar-font-size, 0.7rem);
+    font-weight: 600;
+    line-height: 1.15;
+    padding: 2px 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    text-align: center;
+    /* Allow the pill text to wrap inside narrow columns instead of overflowing.
+       Combined with `overflow: hidden` this falls back to clipping if a column
+       is so narrow that even wrapped text won't fit. */
+    white-space: normal;
+    word-break: break-word;
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.owc-mobile-week-cluster:hover {
+    filter: brightness(0.92);
+}

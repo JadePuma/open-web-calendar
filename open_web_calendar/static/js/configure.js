@@ -616,7 +616,21 @@ function loadCalendar() {
     showXHRError(xhr);
   });
 
-  scheduler.attachEvent("onXLE", disableLoader);
+  let owcMobileInitialized = false;
+  scheduler.attachEvent("onXLE", function () {
+    disableLoader();
+    if (
+      typeof window.OwcMobileView !== "undefined" &&
+      typeof window.OwcMobileView.init === "function"
+    ) {
+      if (!owcMobileInitialized) {
+        window.OwcMobileView.init(scheduler, specification);
+        owcMobileInitialized = true;
+      } else if (typeof window.OwcMobileView.refresh === "function") {
+        window.OwcMobileView.refresh();
+      }
+    }
+  });
 
   //requestJSON(schedulerUrl, loadEventsOnSuccess, loadEventsOnError);
   scheduler.setLoadMode("day");

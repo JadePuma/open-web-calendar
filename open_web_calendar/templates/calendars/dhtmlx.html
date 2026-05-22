@@ -18,6 +18,7 @@ SPDX-License-Identifier: GPL-2.0-only
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/dhtmlx/dhtmlxscheduler.js"
             charset="utf-8"></script>
+        <script src="js/mobile-view.js" charset="utf-8"></script>
         <script src="js/configure.js"
             charset="utf-8"></script>
         <script src="js/common.js"
@@ -28,6 +29,7 @@ SPDX-License-Identifier: GPL-2.0-only
             rel="stylesheet" type="text/css" charset="utf-8">
         <link href="css/dhtmlx/style.css"
             rel="stylesheet" type="text/css" charset="utf-8">
+        <link href="css/dhtmlx/mobile-view.css" rel="stylesheet" type="text/css" charset="utf-8">
         <link rel="icon" type="image/x-icon" href="{{ specification.favicon }}">
         <!-- see https://docs.dhtmlx.com/scheduler/localization.html -->
         <script src="locale_{{ language }}.js" charset="utf-8"></script>
@@ -58,7 +60,26 @@ SPDX-License-Identifier: GPL-2.0-only
             <div class="dhx_cal_header"></div>
             <div class="dhx_cal_data"></div>
         </div>
-        <!-- <div id="loader" class="fullsize"></div> -->
+        <div id="owc-mobile-shell" aria-hidden="true"></div>
+        <div class="owc-mobile-event-modal" role="dialog" aria-modal="true" style="display:none;">
+            <div class="owc-mobile-modal-backdrop"></div>
+            <div class="owc-mobile-modal-card">
+                <button class="owc-mobile-modal-close" aria-label="Close">&times;</button>
+                <div class="owc-mobile-modal-title"></div>
+                <div class="owc-mobile-modal-date"></div>
+                <div class="owc-mobile-modal-content"></div>
+                <div class="owc-mobile-modal-link"></div>
+            </div>
+        </div>
+        <div class="owc-mobile-event-list-modal" role="dialog" aria-modal="true" style="display:none;">
+            <div class="owc-mobile-modal-backdrop"></div>
+            <div class="owc-mobile-modal-card">
+                <button class="owc-mobile-modal-close" aria-label="Close">&times;</button>
+                <div class="owc-mobile-list-modal-title"></div>
+                <div class="owc-mobile-list-modal-content"></div>
+            </div>
+        </div>
+        <div id="loader" class="fullsize"></div>
         <div id="errorWindow" class="hidden fullsize">
             <a class="closeButton" href="javascript:toggleErrorWindow();">X</a>
         </div>
