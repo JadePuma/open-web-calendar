@@ -136,12 +136,18 @@ def app_server(context):
     app_port = get_free_port()
     # from https://werkzeug.palletsprojects.com/en/2.1.x/serving/#shutting-down-the-server
     # see also https://stackoverflow.com/questions/72824420/how-to-shutdown-flask-server
-    p = multiprocessing.Process(target=run_simple, args=("localhost", app_port, app))
+    if sys.platform == "win32":
+        p = threading.Thread(
+            target=run_simple, args=("localhost", app_port, app), daemon=True
+        )
+    else:
+        p = multiprocessing.Process(target=run_simple, args=("localhost", app_port, app))
     p.start()
     context.index_page = f"http://localhost:{app_port}/"
-    wait_for_http_server(context.index_page, on_error=p.terminate)
+    stop_server = getattr(p, "terminate", lambda: None)
+    wait_for_http_server(context.index_page, on_error=stop_server)
     yield
-    p.terminate()
+    stop_server()
 
 
 def wait_for_http_server(url, on_error=lambda: None):

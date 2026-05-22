@@ -53,6 +53,7 @@ def step_impl(context, calendar_name):
 
 
 @given('we set the "{parameter_name}" parameter to {parameter_value}')
+@when('we set the "{parameter_name}" parameter to {parameter_value}')
 def step_impl(context, parameter_name, parameter_value):
     context.specification[parameter_name] = json.loads(parameter_value)
 
@@ -232,6 +233,69 @@ def step_impl(context):
 def step_impl(context):
     """Move the calendar one section further."""
     click_button(context, By.CLASS_NAME, "dhx_cal_prev_button")
+
+
+@given('we set the viewport to {width:d}x{height:d}')
+@when('we set the viewport to {width:d}x{height:d}')
+def step_impl(context, width, height):
+    """Set the browser viewport and trigger resize listeners."""
+    context.browser.set_window_size(width, height)
+    context.browser.execute_script(
+        'window.dispatchEvent(new Event("resize"));'
+        'window.dispatchEvent(new Event("orientationchange"));'
+    )
+    import time
+
+    time.sleep(0.3)
+
+
+@then('the body has class "{cls}"')
+def step_impl(context, cls):
+    """Assert that the body class list contains a class."""
+    body_classes = context.browser.find_element(By.TAG_NAME, "body").get_attribute(
+        "class"
+    )
+    classes = (body_classes or "").split()
+    assert cls in classes, f"Expected body to have class {cls!r}, got {body_classes!r}."
+
+
+@then('the body does not have class "{cls}"')
+def step_impl(context, cls):
+    """Assert that the body class list does not contain a class."""
+    body_classes = context.browser.find_element(By.TAG_NAME, "body").get_attribute(
+        "class"
+    )
+    classes = (body_classes or "").split()
+    assert (
+        cls not in classes
+    ), f"Expected body to not have class {cls!r}, got {body_classes!r}."
+
+
+@then('the element "{selector}" is visible')
+@then("the element '{selector}' is visible")
+def step_impl(context, selector):
+    """Assert that a CSS selector resolves to a visible element."""
+    element = context.browser.find_element(By.CSS_SELECTOR, selector)
+    assert element.is_displayed(), f"Expected {selector!r} to be visible."
+
+
+@then('the element "{selector}" is not visible')
+@then("the element '{selector}' is not visible")
+def step_impl(context, selector):
+    """Assert that a CSS selector is either hidden or missing."""
+    elements = context.browser.find_elements(By.CSS_SELECTOR, selector)
+    assert not elements or not elements[0].is_displayed(), (
+        f"Expected {selector!r} to be hidden or missing, "
+        f"but found visible element: {elements[0]!r}"
+    )
+
+
+@when('we click the element "{selector}"')
+@when("we click the element '{selector}'")
+def step_impl(context, selector):
+    """Click an element resolved by a CSS selector."""
+    element = context.browser.find_element(By.CSS_SELECTOR, selector)
+    element.click()
 
 
 def click_button(context, selector_type, selector):
