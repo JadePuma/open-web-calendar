@@ -467,6 +467,33 @@ function loadCalendar() {
   // see https://docs.dhtmlx.com/scheduler/custom_events_content.html
   // see https://docs.dhtmlx.com/scheduler/api__scheduler_event_bar_text_template.html
   scheduler.templates.event_bar_text = function (start, end, event) {
+    if (specification["show_only_event_times"]) {
+      const hourFormat = specification["hour_format"]
+        .replace('%g', 'numeric')
+        .replace('%h', '2-digit')
+        .replace('%H', '2-digit')
+        .replace('%G', 'numeric')
+        .replace('%i', '2-digit');
+      const showAmPm = specification["hour_format"].includes('%a') || specification["hour_format"].includes('%A');
+      const amPmCase = showAmPm ? (specification["hour_format"].includes('%a') ? 'lowercase' : 'uppercase') : 'none';
+      const hour12 = specification["hour_format"].includes('%g') || specification["hour_format"].includes('%h');
+
+      let startTime = new Date(event.start_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
+      let endTime = new Date(event.end_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
+
+      if (!showAmPm) {
+        startTime = startTime.replace(/(AM|PM)/i, '');
+        endTime = endTime.replace(/(AM|PM)/i, '');
+      } else if (amPmCase === 'lowercase') {
+        startTime = startTime.replace(' AM', 'am').replace(' PM', 'pm');
+        endTime = endTime.replace(' AM', 'am').replace(' PM', 'pm');
+      } else {
+        startTime = startTime.replace(' AM', 'AM').replace(' PM', 'PM');
+        endTime = endTime.replace(' AM', 'AM').replace(' PM', 'PM');
+      }
+
+      return escapeHtml(`${startTime} - ${endTime}`);
+    }
     return template.plain_summary(event);
   };
 
@@ -516,61 +543,6 @@ function loadCalendar() {
     ]);
   };
 
-  // general style
-  scheduler.templates.event_class = function (start, end, event) {
-    if (event.type == "error") {
-      showEventError(event);
-    }
-    // Optimize event retrieval by limiting to the day of the event
-    var dayStart = new Date(
-      start.getFullYear(),
-      start.getMonth(),
-      start.getDate()
-    );
-    var dayEnd = new Date(
-      end.getFullYear(),
-      end.getMonth(),
-      end.getDate(),
-      23,
-      59,
-      59
-    );
-    var evs = scheduler.getEvents(dayStart, dayEnd);
-
-    if (specification["show_only_event_times"]) {
-      const hourFormat = specification["hour_format"]
-        .replace('%g', 'numeric')  // 12-hour without leading zero
-        .replace('%h', '2-digit')  // 12-hour with leading zero
-        .replace('%H', '2-digit')  // 24-hour with leading zero
-        .replace('%G', 'numeric')  // 24-hour without leading zero
-        .replace('%i', '2-digit'); // minutes with leading zero
-      const showAmPm = specification["hour_format"].includes('%a') || specification["hour_format"].includes('%A');
-      const amPmCase = showAmPm ? (specification["hour_format"].includes('%a') ? 'lowercase' : 'uppercase') : 'none';
-
-      const hour12 = specification["hour_format"].includes('%g') || specification["hour_format"].includes('%h');
-      let startTime = new Date(event.start_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
-      let endTime = new Date(event.end_date).toLocaleTimeString([], { hour: hourFormat.includes('numeric') ? 'numeric' : '2-digit', minute: '2-digit', hour12: hour12 });
-
-      if (!showAmPm) {
-        startTime = startTime.replace(/(AM|PM)/i, '');
-        endTime = endTime.replace(/(AM|PM)/i, '');
-      } else if (amPmCase === 'lowercase') {
-        startTime = startTime.replace(' AM', 'am').replace(' PM', 'pm');
-        endTime = endTime.replace(' AM', 'am').replace(' PM', 'pm');
-      } else {
-        startTime = startTime.replace(' AM', 'AM').replace(' PM', 'PM');
-        endTime = endTime.replace(' AM', 'AM').replace(' PM', 'PM');
-      }
-
-      event.text = `${startTime} - ${endTime}`;
-    }
-    return (
-      event["css-classes"].map(escapeHtml).join(" ") +
-      (evs.length > 1 ? " multi-day" : "") +
-      (specification["hide_dot_and_time"] || specification?.show_only_event_times ? " hide-dot-and-time" : "")
-    );
-  };
-
   // set agenda date
   scheduler.templates.agenda_date = scheduler.templates.month_date;
   // general style
@@ -596,6 +568,9 @@ function loadCalendar() {
     });
 
     var classes = event["css-classes"].map(escapeHtml).join(" ");
+    if (specification["hide_dot_and_time"] || specification["show_only_event_times"]) {
+      classes += " hide-dot-and-time";
+    }
     return eventsOnSameDay === 1 ? classes + " single-event" : classes;
   };
 
