@@ -40,6 +40,7 @@
       listModalClick: null,
       keydown: null,
       resize: null,
+      parentResizeBound: false,
       onClickId: null,
       onXleId: null,
       onViewChangeId: null,
@@ -122,12 +123,48 @@
    * @param {Object} specification - Calendar specification object.
    * @returns {boolean} True when viewport width is below compact width.
    */
+  function _viewportWidth() {
+    try {
+      if (window.parent && window.parent !== window) {
+        const parentWidth = window.parent.innerWidth;
+        if (Number.isFinite(parentWidth) && parentWidth > 0) {
+          return parentWidth;
+        }
+      }
+    } catch (error) {
+      console.error("Unable to read parent viewport width", error);
+    }
+    return window.innerWidth;
+  }
+
+  function _bindParentResize(handler) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.addEventListener("resize", handler);
+        return true;
+      }
+    } catch (error) {
+      console.error("Unable to listen to parent resize", error);
+    }
+    return false;
+  }
+
+  function _unbindParentResize(handler) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.removeEventListener("resize", handler);
+      }
+    } catch (error) {
+      console.error("Unable to remove parent resize listener", error);
+    }
+  }
+
   function _isMobile(specification) {
     const parsed = Number.parseInt(specification?.compact_layout_width, 10);
     const compactWidth = Number.isNaN(parsed)
       ? MOBILE_BREAKPOINT_FALLBACK
       : parsed;
-    return window.innerWidth < compactWidth;
+    return _viewportWidth() < compactWidth;
   }
 
   /**
@@ -1030,6 +1067,10 @@
     if (state.listeners.resize) {
       window.removeEventListener("resize", state.listeners.resize);
       window.removeEventListener("orientationchange", state.listeners.resize);
+      if (state.listeners.parentResizeBound) {
+        _unbindParentResize(state.listeners.resize);
+        state.listeners.parentResizeBound = false;
+      }
     }
 
     state.listeners.resize = _debounce(function onViewportChange() {
@@ -1040,6 +1081,7 @@
 
     window.addEventListener("resize", state.listeners.resize);
     window.addEventListener("orientationchange", state.listeners.resize);
+    state.listeners.parentResizeBound = _bindParentResize(state.listeners.resize);
   }
 
   /**
@@ -1230,6 +1272,10 @@
     if (state.listeners.resize) {
       window.removeEventListener("resize", state.listeners.resize);
       window.removeEventListener("orientationchange", state.listeners.resize);
+      if (state.listeners.parentResizeBound) {
+        _unbindParentResize(state.listeners.resize);
+        state.listeners.parentResizeBound = false;
+      }
     }
     if (state.listeners.onClickId && state.scheduler) {
       state.scheduler.detachEvent(state.listeners.onClickId);
@@ -1295,6 +1341,7 @@
     state.listeners.listModalClick = null;
     state.listeners.keydown = null;
     state.listeners.resize = null;
+    state.listeners.parentResizeBound = false;
     state.listeners.onClickId = null;
     state.listeners.onXleId = null;
     state.listeners.onViewChangeId = null;

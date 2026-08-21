@@ -6,6 +6,20 @@
  *
  */
 
+function viewportWidth() {
+  try {
+    if (window.parent && window.parent !== window) {
+      var parentWidth = window.parent.innerWidth;
+      if (Number.isFinite(parentWidth) && parentWidth > 0) {
+        return parentWidth;
+      }
+    }
+  } catch (error) {
+    console.error("Unable to read parent viewport width", error);
+  }
+  return window.innerWidth;
+}
+
 function parseDate(yyyy_mm_dd) {
   // parse a date without timezone information
   // see https://stackoverflow.com/questions/17545708/parse-date-without-timezone-javascript
@@ -322,7 +336,7 @@ function getHeader() {
   }
   // switch the header to a compact one
   // see https://docs.dhtmlx.com/scheduler/touch_support.html
-  if (window.innerWidth < Number.parseInt(specification.compact_layout_width)) {
+  if (viewportWidth() < Number.parseInt(specification.compact_layout_width)) {
     return {
       rows: [
         {
@@ -366,7 +380,7 @@ var IS_TOUCH_SCREEN = window.matchMedia("(pointer: coarse)").matches;
 var HAS_TOOLTIP = !IS_TOUCH_SCREEN;
 
 function loadCalendar() {
-  const mobile = window.innerWidth < 480;
+  const mobile = viewportWidth() < 480;
   /* Format the time of the hour.
    * see https://docs.dhtmlx.com/scheduler/settings_format.html
    * see https://docs.dhtmlx.com/scheduler/api__scheduler_hour_date_config.html
