@@ -319,10 +319,7 @@ body.owc-mobile-active #owc-mobile-shell {
     margin-top: 0.5rem;
 }
 
-.hide-dot-and-time .owc-mobile-event-time,
-.hide-dot-and-time .owc-mobile-event-dot,
-.owc-mobile-modal-card.hide-dot-and-time .owc-mobile-modal-date,
-.hide-dot-and-time.owc-mobile-modal-card .owc-mobile-modal-date {
+.hide-dot-and-time .owc-mobile-event-dot {
     display: none !important;
 }
 
