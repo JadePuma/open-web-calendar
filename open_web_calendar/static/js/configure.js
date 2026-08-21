@@ -17,6 +17,11 @@ function parseDate(yyyy_mm_dd) {
   );
 }
 
+function specEnabled(name) {
+  var value = specification[name];
+  return value === true || value === "true" || value === "yes";
+}
+
 function escapeHtml(unsafe) {
   // from https://stackoverflow.com/a/6234804
   return unsafe
@@ -395,7 +400,7 @@ function loadCalendar() {
   scheduler.attachEvent("onBeforeViewChange", resetConfig);
   scheduler.attachEvent("onSchedulerResize", resetConfig);
   scheduler.attachEvent("onQuickInfo", function (eventId) {
-    if (specification["event_hide_dot_and_time"]) {
+    if (specEnabled("event_hide_dot_and_time")) {
       var quickInfo = document.querySelector('.dhx_cal_quick_info');
       if (quickInfo) {
         quickInfo.classList.add('hide-dot-and-time');
@@ -568,7 +573,7 @@ function loadCalendar() {
     });
 
     var classes = event["css-classes"].map(escapeHtml).join(" ");
-    if (specification["hide_dot_and_time"] || specification["show_only_event_times"]) {
+    if (specEnabled("hide_dot_and_time") || specEnabled("show_only_event_times")) {
       classes += " hide-dot-and-time";
     }
     return eventsOnSameDay === 1 ? classes + " single-event" : classes;

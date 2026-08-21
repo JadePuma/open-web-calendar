@@ -279,6 +279,16 @@ def step_impl(context, selector):
     assert element.is_displayed(), f"Expected {selector!r} to be visible."
 
 
+@then('the element "{selector}" has the text "{text}"')
+@then("the element '{selector}' has the text '{text}'")
+@then("the element '{selector}' has the text \"{text}\"")
+def step_impl(context, selector, text):
+    """Assert that a CSS selector's visible text matches exactly."""
+    element = context.browser.find_element(By.CSS_SELECTOR, selector)
+    actual = (element.text or "").strip()
+    assert actual == text, f"Expected {selector!r} to have text {text!r}, got {actual!r}."
+
+
 @then('the element "{selector}" is not visible')
 @then("the element '{selector}' is not visible")
 def step_impl(context, selector):

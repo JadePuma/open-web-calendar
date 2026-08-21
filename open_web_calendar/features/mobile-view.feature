@@ -15,12 +15,21 @@ Feature: Mobile calendar view
       And the body has class "owc-mobile-active"
       And we can see the text "test1"
 
+  Scenario: Mobile month day with events shows event count
+    Given we add the calendar "one-event"
+     When we set the viewport to 360x800
+      And we look at 2019-03-04
+     Then the element '[data-owc-date="2019-03-04"] .owc-mobile-event-count' is visible
+      And the element '[data-owc-date="2019-03-04"] .owc-mobile-event-count' has the text "1"
+      And the element '[data-owc-date="2019-03-05"] .owc-mobile-event-count' is not visible
+
   Scenario: Mobile viewport empty day shows empty state
     Given we add the calendar "one-event"
      When we set the viewport to 360x800
       And we look at 2019-03-04
       And we click the element '[data-owc-action="select-day"][data-owc-date="2019-03-05"]'
      Then the element ".owc-mobile-empty-state" is visible
+      And we can see the text "No events on this day"
 
   Scenario: Mobile viewport event tap opens modal
     Given we add the calendar "one-event"

@@ -154,32 +154,28 @@ body.owc-mobile-active #owc-mobile-shell {
 }
 
 .owc-mobile-date-number {
-    font-size: var(--dhx-scheduler-caption-font-size);
+    font-size: calc(var(--dhx-scheduler-caption-font-size) - 2px);
     font-weight: var(--dhx-scheduler-caption-font-weight);
     line-height: 1;
+    position: absolute;
+    right: 0.25rem;
+    top: 0.25rem;
 }
 
-.owc-mobile-dot-row {
+.owc-mobile-event-count {
     align-items: center;
-    display: flex;
-    gap: 0.1875rem;
-    justify-content: center;
-    min-height: 0.5rem;
-}
-
-.owc-mobile-event-dot {
-    background: var(--dhx-scheduler-event-background);
-    border-radius: 50%;
-    display: block;
-    height: 0.375rem;
-    width: 0.375rem;
-}
-
-.owc-mobile-more-count {
-    color: var(--dhx-scheduler-month-header-color);
+    background-color: var(--dhx-scheduler-event-background);
+    border-radius: 999px;
+    box-sizing: border-box;
+    color: var(--dhx-scheduler-event-color);
+    display: inline-flex;
     font-size: 0.625rem;
     font-weight: 700;
+    height: 1.125rem;
+    justify-content: center;
     line-height: 1;
+    min-width: 1.125rem;
+    padding: 0 0.2rem;
 }
 
 .owc-mobile-day-list {
@@ -321,6 +317,13 @@ body.owc-mobile-active #owc-mobile-shell {
     color: var(--dhx-scheduler-secondary-color);
     font-size: var(--dhx-scheduler-caption-font-size);
     margin-top: 0.5rem;
+}
+
+.hide-dot-and-time .owc-mobile-event-time,
+.hide-dot-and-time .owc-mobile-event-dot,
+.owc-mobile-modal-card.hide-dot-and-time .owc-mobile-modal-date,
+.hide-dot-and-time.owc-mobile-modal-card .owc-mobile-modal-date {
+    display: none !important;
 }
 
 .owc-mobile-modal-content {

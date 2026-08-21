@@ -7,6 +7,7 @@
   const MOBILE_MODAL_OPEN_CLASS = "is-open";
   const MOBILE_VIEW_CLASS = "owc-mobile-active";
   const MOBILE_VIEWPORT_CLASS = "owc-mobile-viewport";
+  const EMPTY_DAY_MESSAGE = "No events on this day";
   const MODAL_FOCUSABLE_SELECTOR =
     'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -47,6 +48,11 @@
       clusterDebounceId: null,
     },
   };
+
+  function _specEnabled(specification, name) {
+    const value = specification?.[name];
+    return value === true || value === "true" || value === "yes";
+  }
 
   /**
    * Normalizes a date to the start of its day.
@@ -303,22 +309,16 @@
       cell.appendChild(dateNumber);
 
       const events = scheduler.getEvents(_startOfDay(cellDate), _endOfDay(cellDate));
-      const dotRow = document.createElement("span");
-      dotRow.className = "owc-mobile-dot-row";
-
-      const dotCount = Math.min(events.length, 3);
-      for (let dotIndex = 0; dotIndex < dotCount; dotIndex += 1) {
-        const dot = document.createElement("span");
-        dot.className = "owc-mobile-event-dot";
-        dotRow.appendChild(dot);
+      if (events.length > 0) {
+        const countBadge = document.createElement("span");
+        countBadge.className = "owc-mobile-event-count";
+        countBadge.textContent = String(events.length);
+        countBadge.setAttribute(
+          "aria-label",
+          events.length === 1 ? "1 event" : `${events.length} events`
+        );
+        cell.appendChild(countBadge);
       }
-      if (events.length > 3) {
-        const moreBadge = document.createElement("span");
-        moreBadge.className = "owc-mobile-more-count";
-        moreBadge.textContent = `+${events.length - 3}`;
-        dotRow.appendChild(moreBadge);
-      }
-      cell.appendChild(dotRow);
       monthGrid.appendChild(cell);
     }
 
@@ -402,7 +402,7 @@
     if (!events.length) {
       const empty = document.createElement("div");
       empty.className = "owc-mobile-empty-state";
-      empty.textContent = scheduler.locale?.labels?.no_events || "\u2014";
+      empty.textContent = EMPTY_DAY_MESSAGE;
       list.appendChild(empty);
       fragment.appendChild(list);
       return fragment;
@@ -415,6 +415,12 @@
       const row = document.createElement("button");
       row.type = "button";
       row.className = "owc-mobile-day-list-item";
+      if (
+        _specEnabled(specification, "hide_dot_and_time") ||
+        _specEnabled(specification, "show_only_event_times")
+      ) {
+        row.classList.add("hide-dot-and-time");
+      }
       row.dataset.owcAction = "open-event";
       row.dataset.owcEventKey = key;
 
@@ -493,6 +499,14 @@
 
     state.lastFocusedElement =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const modalCard = state.modal.root.querySelector(".owc-mobile-modal-card");
+    if (modalCard) {
+      modalCard.classList.toggle(
+        "hide-dot-and-time",
+        _specEnabled(specification, "event_hide_dot_and_time")
+      );
+    }
+
     state.modal.root.classList.add(MOBILE_MODAL_OPEN_CLASS);
     state.modal.root.setAttribute("aria-hidden", "false");
 
@@ -717,7 +731,7 @@
     if (!events.length) {
       const empty = document.createElement("div");
       empty.className = "owc-mobile-empty-state";
-      empty.textContent = state.scheduler.locale?.labels?.no_events || "\u2014";
+      empty.textContent = EMPTY_DAY_MESSAGE;
       state.listModal.content.appendChild(empty);
     } else {
       const list = document.createElement("div");
@@ -729,6 +743,12 @@
         const row = document.createElement("button");
         row.type = "button";
         row.className = "owc-mobile-day-list-item";
+        if (
+          _specEnabled(state.specification, "hide_dot_and_time") ||
+          _specEnabled(state.specification, "show_only_event_times")
+        ) {
+          row.classList.add("hide-dot-and-time");
+        }
         row.dataset.owcAction = "open-event";
         row.dataset.owcEventKey = key;
 
